@@ -1,0 +1,70 @@
+from flask import Flask, render_template, request
+
+import numpy as np
+import joblib
+
+app = Flask(__name__)
+model = joblib.load('finaldf.pkl')  # Update with the correct filename
+
+@app.route('/')
+def home():
+    return render_template('home.html')
+
+@app.route('/predict')
+def thyy():
+    return render_template('predict.html')
+
+@app.route('/symptoms')
+def symptoms():
+    return render_template('symptoms.html')
+
+@app.route('/about')
+def about():
+    return render_template('about.html')
+
+@app.route('/login')
+def login():
+    return render_template('login.html')
+
+# @app.route('/signup')
+# def login():
+#     return render_template('signup.hbs')
+
+@app.route('/find')
+def find():
+    return render_template('finddoc.html')
+
+@app.route('/predict', methods=['POST'])
+def predict():
+    if request.method == 'POST':
+        # Extract input values from the form
+        features = [float(request.form[f'feature_{i+1}']) for i in range(21)]  # Adjust based on your form field names
+
+        # Convert the input data to a NumPy array
+        input_data = np.array(features).reshape(1, -1)
+
+        # Make predictions
+        prediction = model.predict(input_data)[0]
+        if prediction == 0:
+            message = "Patient is healthy without thyroid."
+        elif prediction == 1:
+            message = "Patient has hyperthyroid"
+        elif prediction == 2:
+            message = "Patient has compensated hypothyroid"
+        elif prediction == 3:
+            message = "Patient has primary hypothyroid"
+        elif prediction == 4:
+            message = "Patient has secondary hypothyroid"
+        else:
+            message="error"
+        
+        # Display the prediction
+        return render_template('result.html', prediction=prediction,message=message)
+
+
+# @app.route('/info')
+# def info():
+#     return render_template('info.html')
+
+if __name__ == '__main__':
+    app.run(debug=True)
