@@ -7,3 +7,5 @@
 # The AI model was created using XGBoost alogorithm. The following kaggle notebook was used as refernce to work on dataset : https://www.kaggle.com/code/emmanuelfwerr/xgboost-multi-class-classification/notebook
 
 # the combined dataset was modified and used to train and test the split data. This was done in combined.ipynb using jupyter notebook. 
+
+# the resulting accuracy using XGBoost algorithm was found to be 0.97. This model was stored in a pickle file using joblib.dump.
